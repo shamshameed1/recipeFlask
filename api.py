@@ -16,10 +16,11 @@ def create_connection(path):
   
 
 def execute_query(connection, query, values = ()):
-   
+    
     try:
         if len(values)> 0:
-            connection.execute(query, values)
+            connection.execute(query, (values,))
+            
         else:
             connection.execute(query)
         connection.commit()
@@ -105,9 +106,9 @@ def create_recipe():
 
 @app.route('/recipe/delete/<id>/', methods=['POST'])
 def delete_recipe(id):
-    delete_query = '''DELETE FROM recipes WHERE id = ?'''
-    execute_query(conn, delete_query, (id))
+    execute_query(conn, '''DELETE FROM recipes WHERE id=?''', (id))
     return redirect(url_for("home"))
+   
 
 @app.route('/recipe/<id>', methods=['GET', 'POST'])
 def show_recipe(id):
